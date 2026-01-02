@@ -1,5 +1,5 @@
 {
-  "name": "oauth-momo",
+  "name": "@auth/mono",
   "private": true,
   "scripts": {
     "build": "turbo run build",
@@ -11,14 +11,13 @@
   "devDependencies": {
     "prettier": "^3.7.4",
     "turbo": "^2.7.2",
-    "typescript": "5.9.2"
+    "typescript": "5.9.3"
   },
   "engines": {
     "node": ">=18"
   },
   "packageManager": "bun@1.3.5",
   "workspaces": [
-    "apps/*",
-    "packages/*"
+    "apps/*"
   ]
 }
