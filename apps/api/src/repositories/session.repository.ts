@@ -13,6 +13,7 @@ export interface CreateSessionData {
 
 export interface UpdateSessionData {
   lastActivity?: Date;
+  expiresAt?: Date;
   deviceName?: string;
   deviceType?: string;
 }

@@ -15,9 +15,14 @@ export interface UpdatePasskeyData {
 
 export class PasskeyRepository {
   async create(data: CreatePasskeyData) {
-    return await prisma.passkey.create({
-      data,
-    });
+    try {
+      return await prisma.passkey.create({
+        data,
+      });
+    } catch (error) {
+      console.error("Error in create repository:", error);
+      throw error;
+    }
   }
 
   async findByCredentialId(credentialId: string) {
@@ -38,10 +43,15 @@ export class PasskeyRepository {
   }
 
   async findByUserId(userId: string) {
-    return await prisma.passkey.findMany({
-      where: { userId },
-      orderBy: { createdAt: "desc" },
-    });
+    try {
+      return await prisma.passkey.findMany({
+        where: { userId },
+        orderBy: { createdAt: "desc" },
+      });
+    } catch (error) {
+      console.error("Error in findByUserId repository:", error);
+      throw error;
+    }
   }
 
   async findById(id: string) {

@@ -15,19 +15,40 @@ export class PasskeyService {
   }
 
   async createPasskey(data: CreatePasskeyData) {
-    const existingPasskey = await this.passkeyRepository.findByCredentialId(
-      data.credentialId
-    );
+    try {
+      const existingPasskey = await this.passkeyRepository.findByCredentialId(
+        data.credentialId
+      );
 
-    if (existingPasskey) {
-      throw new Error("Passkey with this credential ID already exists");
+      if (existingPasskey) {
+        throw new Error("Passkey with this credential ID already exists");
+      }
+
+      return await this.passkeyRepository.create(data);
+    } catch (error) {
+      console.error("Error in createPasskey service:", error);
+      if (error instanceof Error && error.message.includes("already exists")) {
+        throw error;
+      }
+      throw new Error(
+        error instanceof Error
+          ? `Failed to create passkey: ${error.message}`
+          : "Failed to create passkey"
+      );
     }
-
-    return await this.passkeyRepository.create(data);
   }
 
   async getUserPasskeys(userId: string) {
-    return await this.passkeyRepository.findByUserId(userId);
+    try {
+      return await this.passkeyRepository.findByUserId(userId);
+    } catch (error) {
+      console.error("Error in getUserPasskeys service:", error);
+      throw new Error(
+        error instanceof Error
+          ? `Failed to retrieve passkeys: ${error.message}`
+          : "Failed to retrieve passkeys"
+      );
+    }
   }
 
   async getPasskeyByCredentialId(credentialId: string) {

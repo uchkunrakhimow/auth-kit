@@ -1,4 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router'
+import { useState } from 'react'
 import { AppSidebar } from '@/components/app-sidebar'
 import { SiteHeader } from '@/components/site-header'
 import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar'
@@ -9,6 +10,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { passkeysApi } from '@/api/passkeys'
 import { toast } from 'sonner'
 import { IconTrash, IconKey, IconCalendar, IconPlus } from '@tabler/icons-react'
+import { AddPasskeyModal } from '@/components/add-passkey-modal'
 const formatDistanceToNow = (date: Date, options?: { addSuffix?: boolean }) => {
   const now = new Date()
   const diffMs = now.getTime() - date.getTime()
@@ -37,6 +39,7 @@ export const Route = createFileRoute('/_authenticated/passkeys')({
 
 function PasskeysPage() {
   const queryClient = useQueryClient()
+  const [isModalOpen, setIsModalOpen] = useState(false)
 
   const { data: passkeys, isLoading } = useQuery({
     queryKey: ['passkeys'],
@@ -82,7 +85,7 @@ function PasskeysPage() {
                     Manage your passkeys for passwordless authentication
                   </p>
                 </div>
-                <Button>
+                <Button onClick={() => setIsModalOpen(true)}>
                   <IconPlus className="h-4 w-4 mr-2" />
                   Add Passkey
                 </Button>
@@ -167,6 +170,7 @@ function PasskeysPage() {
           </div>
         </div>
       </SidebarInset>
+      <AddPasskeyModal open={isModalOpen} onOpenChange={setIsModalOpen} />
     </SidebarProvider>
   )
 }

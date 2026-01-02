@@ -24,11 +24,20 @@ export class PasskeyController {
         deviceName,
       });
 
+      // Convert Prisma dates to ISO strings for JSON serialization
+      const serializedPasskey = {
+        ...passkey,
+        createdAt: passkey.createdAt.toISOString(),
+        lastUsedAt: passkey.lastUsedAt ? passkey.lastUsedAt.toISOString() : null,
+        counter: passkey.counter.toString(),
+      };
+
       return res.status(201).json({
         message: "Passkey created successfully",
-        passkey,
+        passkey: serializedPasskey,
       });
     } catch (error) {
+      console.error("Error creating passkey:", error);
       const errorMessage =
         error instanceof Error ? error.message : "Failed to create passkey";
       return res.status(400).json({ message: errorMessage });
@@ -43,12 +52,23 @@ export class PasskeyController {
 
       const passkeys = await this.passkeyService.getUserPasskeys(req.userId);
 
+      // Convert Prisma dates to ISO strings for JSON serialization
+      const serializedPasskeys = passkeys.map((passkey) => ({
+        ...passkey,
+        createdAt: passkey.createdAt.toISOString(),
+        lastUsedAt: passkey.lastUsedAt ? passkey.lastUsedAt.toISOString() : null,
+        counter: passkey.counter.toString(),
+      }));
+
       return res.status(200).json({
         message: "Passkeys retrieved successfully",
-        passkeys,
+        passkeys: serializedPasskeys,
       });
     } catch (error) {
-      return res.status(500).json({ message: "Failed to retrieve passkeys" });
+      console.error("Error retrieving passkeys:", error);
+      const errorMessage =
+        error instanceof Error ? error.message : "Failed to retrieve passkeys";
+      return res.status(500).json({ message: errorMessage });
     }
   }
 

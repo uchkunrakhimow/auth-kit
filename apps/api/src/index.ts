@@ -33,11 +33,13 @@ app.use(
     secret: env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
+    rolling: true, // Reset expiration on every request
+    name: "sessionId", // Custom session name
     cookie: {
       secure: process.env.NODE_ENV === "production",
       httpOnly: true,
       sameSite: "lax",
-      maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
+      maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days (2,592,000,000 ms)
     },
   })
 );
